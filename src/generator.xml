@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<!-- oracle lib location -->
+	<classPathEntry location="C:\Users\huzh6001\Desktop\SQLSERVEL_GEN\jtds-1.3.1.jar" />
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<!-- oracle URL、username、password -->
+		<jdbcConnection driverClass="net.sourceforge.jtds.jdbc.Driver" connectionURL="jdbc:jtds:sqlserver://localhost:1433;DatabaseName=SFA1" userId="sfa" password="Q1w2e3r4@">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- model package and location -->
+		<javaModelGenerator targetPackage="com.nielsen.sdf.domain" targetProject="C:\Users\huzh6001\Desktop\SQLSERVEL_GEN">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- mapping package and location -->
+		<sqlMapGenerator targetPackage="com.nielsen.sdf.dao" targetProject="C:\Users\huzh6001\Desktop\SQLSERVEL_GEN">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- table name,  change tableName and domainObjectName  -->
+		<table tableName="SFA_REPORTING_FACT_TYPE_MASTER" domainObjectName="Report" 
+			enableCountByExample="false" 
+			enableUpdateByExample="false" 
+			enableDeleteByExample="false" 
+			enableSelectByExample="true" 
+			selectByExampleQueryId="false" 
+		/>
+		
+	</context>
+</generatorConfiguration>
