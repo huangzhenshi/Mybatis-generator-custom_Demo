@@ -1,0 +1,187 @@
+package org.mybatis.generator.config.Context;
+introspectTables 方法 会获取数据库连接，获取表的所有列字段以及属性
+
+
+Context.java
+512行 分别生成 java 和xml文件的
+
+                generatedJavaFiles.addAll(introspectedTable
+                        .getGeneratedJavaFiles());
+                generatedXmlFiles.addAll(introspectedTable
+                        .getGeneratedXmlFiles());
+
+
+生成xml 里面的sql
+package org.mybatis.generator.codegen.mybatis3.xmlmapper  58行
+getSqlMapElement
+
+
+org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithoutBLOBsElementGenerator
+addElements
+没有大字段的 生成 resultMap
+       answer.addAttribute(new Attribute("type", //$NON-NLS-1$
+                returnType));
+相当于给 一个  xml元素 添加一个属性的函数  attribute就是这个意思
+  <resultMap id="BaseResultMap" type="com.nielsen.sdf.domain.Report" >
+
+
+XML生成的核心代码在org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator
+的getSqlMapElement()里面
+
+ protected XmlElement getSqlMapElement() {
+        FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        progressCallback.startTask(getString(
+                "Progress.12", table.toString())); //$NON-NLS-1$
+        XmlElement answer = new XmlElement("mapper"); //$NON-NLS-1$
+        String namespace = introspectedTable.getMyBatis3SqlMapNamespace();
+        answer.addAttribute(new Attribute("namespace", //$NON-NLS-1$
+                namespace));
+
+        context.getCommentGenerator().addRootComment(answer);
+
+        addResultMapWithoutBLOBsElement(answer);
+        addResultMapWithBLOBsElement(answer);
+        addExampleWhereClauseElement(answer);
+        addMyBatis3UpdateByExampleWhereClauseElement(answer);
+        addBaseColumnListElement(answer);
+        addBlobColumnListElement(answer);
+        addSelectByExampleWithBLOBsElement(answer);
+        addSelectByExampleWithoutBLOBsElement(answer);
+        addSelectByPrimaryKeyElement(answer);
+        addDeleteByPrimaryKeyElement(answer);
+        addDeleteByExampleElement(answer);
+        addInsertElement(answer);
+        addInsertSelectiveElement(answer);
+        addCountByExampleElement(answer);
+        addUpdateByExampleSelectiveElement(answer);
+        addUpdateByExampleWithBLOBsElement(answer);
+        addUpdateByExampleWithoutBLOBsElement(answer);
+        addUpdateByPrimaryKeySelectiveElement(answer);
+        addUpdateByPrimaryKeyWithBLOBsElement(answer);
+        addUpdateByPrimaryKeyWithoutBLOBsElement(answer);
+
+        return answer;
+    }
+
+
+
+
+设计 select 元素的id  重要  要统一修改为 findAllByPage
+org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByPrimaryKeyElementGenerator
+addElements
+
+answer.addAttribute(new Attribute(
+                "id", introspectedTable.getSelectByPrimaryKeyStatementId())); //$NON-NLS-1$
+
+直接修改为即可
+answer.addAttribute(new Attribute("id", "findById")); //$NON-NLS-1$
+
+
+生成SQL 列名的 code
+BaseColumnListElementGenerator addElements()
+
+往element里面添加sql 文本的写法
+sb=  ID, REPORTING_FACT_TYPE_NAME, COMMENT, PROJECT_ID, IS_PRODUCT_APPLICABLE
+
+        if (sb.length() > 0) {
+            answer.addElement((new TextElement(sb.toString())));
+        }
+
+完整的代码，获取并添加进去 所有的列
+ StringBuilder sb = new StringBuilder();
+       /* Iterator<IntrospectedColumn> iter = introspectedTable
+                .getNonBLOBColumns().iterator();*/
+        //改成获取所有的列
+        Iterator<IntrospectedColumn> iter = introspectedTable
+                .getAllColumns().iterator();
+        while (iter.hasNext()) {
+            sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(iter
+                    .next()));
+
+            if (iter.hasNext()) {
+                sb.append(", "); //$NON-NLS-1$
+            }
+
+            if (sb.length() > 80) {
+                answer.addElement(new TextElement(sb.toString()));
+                sb.setLength(0);
+            }
+        }
+
+        if (sb.length() > 0) {
+            answer.addElement((new TextElement(sb.toString())));
+        }
+
+ sb.append('\'');
+换行符
+
+
+SelectByExampleWithoutBLOBsElementGenerator
+把这个方法 变成 findAllPage
+之前的findById 还是保存吧
+
+修改xml 的排版风格
+XmlElement 
+getFormattedContent()
+
+            sb.append("</"); //$NON-NLS-1$
+            sb.append(name);
+            sb.append('>');
+新增
+            if("if".equals(name)||"trim".equals(name)||"set".equals(name)){
+            }else{
+            	 OutputUtilities.newLine(sb);
+            }
+
+
+
+insert 方法要修改
+直接insert 通过判断 isNullable属性来判断是否选择
+1）parameterType 直接写死为Report 不要区分什么大字段
+2）insert 直接屏蔽，把insertSelective改良，id 改为  save
+3）判断 column的isNullable属性来判断是否选择
+
+
+addElements()
+         //算是一个bug把，在sqlserver中，ID居然读不出 isIdentity()为true
+            if("ID".equals(introspectedColumn.getActualColumnName())){
+            	 continue;
+            }
+
+BASERULES 里面 ignore  BLOB，其实也不需要再那边改
+calculateAllFieldsClass()
+
+    /* if (generateRecordWithBLOBsClass()) {
+            answer = introspectedTable.getRecordWithBLOBsType();
+        } else */if (generateBaseRecordClass()) {
+            answer = introspectedTable.getBaseRecordType();
+        } else {
+            answer = introspectedTable.getPrimaryKeyType();
+        }
+
+
+改良insert 插入
+            //如果必填field的话，直接拼 columnName即可 和value值 不需要用if 判断
+            if(!introspectedColumn.isNullable()){
+            	sb.setLength(0);
+                sb.append(MyBatis3FormattingUtilities
+                    .getEscapedColumnName(introspectedColumn));
+                sb.append(',');
+                insertTrimElement.addElement(new TextElement(sb.toString()));
+                
+                sb.setLength(0);
+                sb.append(MyBatis3FormattingUtilities
+                    .getParameterClause(introspectedColumn));
+                sb.append(',');
+                valuesTrimElement.addElement(new TextElement(sb.toString()));
+           	 continue;
+           }
+
+update 修改
+同save
+1）parameterType 直接写死为Report 不要区分什么大字段
+2）insert 直接屏蔽，把insertSelective改良，id 改为  save
+3）判断 column的isNullable属性来判断是否选择
+
+update 只取 addUpdateByPrimaryKeySelectiveElement
+
