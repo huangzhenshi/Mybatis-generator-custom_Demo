@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nielsen.sdf.dao.ReportMapper" >
+  <resultMap id="mainResultMap" type="com.nielsen.sdf.domain.Report" >
+    <result column="ID" property="id" />
+    <result column="REPORTING_FACT_TYPE_NAME" property="reportingFactTypeName" />
+    <result column="COMMENT" property="comment" />
+    <result column="PROJECT_ID" property="projectId" />
+    <result column="IS_PRODUCT_APPLICABLE" property="isProductApplicable" />
+    <result column="PRE_BUILD_SCRIPT" property="preBuildScript" />
+    <result column="BUILD_SCRIPT" property="buildScript" />
+    <result column="POST_BUILD_SCRIPT" property="postBuildScript" />
+  </resultMap>
+
+  <sql id="All_Column_List" >
+    ID, REPORTING_FACT_TYPE_NAME, COMMENT, PROJECT_ID, IS_PRODUCT_APPLICABLE, PRE_BUILD_SCRIPT, 
+    BUILD_SCRIPT, POST_BUILD_SCRIPT
+  </sql>
+
+  <select id="findAllPage" resultMap="mainResultMap" >
+    select ID, REPORTING_FACT_TYPE_NAME, COMMENT, PROJECT_ID, IS_PRODUCT_APPLICABLE, 
+    PRE_BUILD_SCRIPT, BUILD_SCRIPT, POST_BUILD_SCRIPT
+    from SFA_REPORTING_FACT_TYPE_MASTER
+    where ${column}=#{value} ORDER BY id offset #{startNum}-1   rows fetch next #{pageSize} rows only 
+  </select>
+
+  <select id="findById" resultMap="mainResultMap" >
+    select ID, REPORTING_FACT_TYPE_NAME, COMMENT, PROJECT_ID, IS_PRODUCT_APPLICABLE, 
+    PRE_BUILD_SCRIPT, BUILD_SCRIPT, POST_BUILD_SCRIPT
+    from SFA_REPORTING_FACT_TYPE_MASTER
+    where ID = #{id}
+  </select>
+
+  <insert id="save" parameterType="com.nielsen.sdf.domain.Report" >
+    insert into SFA_REPORTING_FACT_TYPE_MASTER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      REPORTING_FACT_TYPE_NAME,
+      <if test="comment != null" >
+        COMMENT,
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      IS_PRODUCT_APPLICABLE,
+      PRE_BUILD_SCRIPT,
+      BUILD_SCRIPT,
+      POST_BUILD_SCRIPT,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{reportingFactTypeName},
+      <if test="comment != null" >
+        #{comment},
+      </if>
+      <if test="projectId != null" >
+        #{projectId},
+      </if>
+      #{isProductApplicable},
+      #{preBuildScript},
+      #{buildScript},
+      #{postBuildScript},
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.nielsen.sdf.domain.Report" >
+    update SFA_REPORTING_FACT_TYPE_MASTER
+    <set >
+      REPORTING_FACT_TYPE_NAME = #{reportingFactTypeName},
+      <if test="comment != null" >
+        COMMENT = #{comment},
+      </if>
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId},
+      </if>
+      IS_PRODUCT_APPLICABLE = #{isProductApplicable},
+      PRE_BUILD_SCRIPT = #{preBuildScript},
+      BUILD_SCRIPT = #{buildScript},
+      POST_BUILD_SCRIPT = #{postBuildScript}
+    </set>
+    where ID = #{id}
+  </update>
+
+</mapper>

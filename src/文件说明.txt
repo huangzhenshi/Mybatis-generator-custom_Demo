@@ -1,0 +1,9 @@
+mybatis-generator-core-1.3.2-sources.jar.zip
+是最原始的jar包，基于这里面的源码修改的。
+
+generator.xml 主要的配置文件，配置生成Mapper.xml的规则和 java实体类规则，实际还是要结合代码，因为很多生成直接根据我现在的项目修改的
+有些我不用的方法，直接注释掉了。
+
+ReportMapper.xml 和Report.java是目标生成文件
+
+表结构.sql 
