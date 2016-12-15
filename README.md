@@ -9,15 +9,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.nielsen.sdf.dao.ReportMapper" >
-  <resultMap id="mainResultMain" type="com.nielsen.sdf.domain.Report" >
-    <result column="ID" property="id" jdbcType="INTEGER" />
-    <result column="REPORTING_FACT_TYPE_NAME" property="reportingFactTypeName" jdbcType="VARCHAR" />
-    <result column="COMMENT" property="comment" jdbcType="VARCHAR" />
-    <result column="PROJECT_ID" property="projectId" jdbcType="INTEGER" />
-    <result column="IS_PRODUCT_APPLICABLE" property="isProductApplicable" jdbcType="BIT" />
-    <result column="PRE_BUILD_SCRIPT" property="preBuildScript" jdbcType="CLOB" />
-    <result column="BUILD_SCRIPT" property="buildScript" jdbcType="CLOB" />
-    <result column="POST_BUILD_SCRIPT" property="postBuildScript" jdbcType="CLOB" />
+  <resultMap id="mainResultMap" type="com.nielsen.sdf.domain.Report" >
+    <result column="ID" property="id" />
+    <result column="REPORTING_FACT_TYPE_NAME" property="reportingFactTypeName" />
+    <result column="COMMENT" property="comment" />
+    <result column="PROJECT_ID" property="projectId" />
+    <result column="IS_PRODUCT_APPLICABLE" property="isProductApplicable" />
+    <result column="PRE_BUILD_SCRIPT" property="preBuildScript" />
+    <result column="BUILD_SCRIPT" property="buildScript" />
+    <result column="POST_BUILD_SCRIPT" property="postBuildScript" />
   </resultMap>
 
   <sql id="All_Column_List" >
@@ -29,15 +29,14 @@
     select ID, REPORTING_FACT_TYPE_NAME, COMMENT, PROJECT_ID, IS_PRODUCT_APPLICABLE, 
     PRE_BUILD_SCRIPT, BUILD_SCRIPT, POST_BUILD_SCRIPT
     from SFA_REPORTING_FACT_TYPE_MASTER
-    where ID = #{id,jdbcType=INTEGER}
-     ORDER BY id offset #{startNum}-1   rows fetch next #{pageSize} rows only 
+    where ${column}=#{value} ORDER BY id offset #{startNum}-1   rows fetch next #{pageSize} rows only 
   </select>
 
   <select id="findById" resultMap="mainResultMap" >
     select ID, REPORTING_FACT_TYPE_NAME, COMMENT, PROJECT_ID, IS_PRODUCT_APPLICABLE, 
     PRE_BUILD_SCRIPT, BUILD_SCRIPT, POST_BUILD_SCRIPT
     from SFA_REPORTING_FACT_TYPE_MASTER
-    where ID = #{id,jdbcType=INTEGER}
+    where ID = #{id}
   </select>
 
   <insert id="save" parameterType="com.nielsen.sdf.domain.Report" >
@@ -56,39 +55,129 @@
       POST_BUILD_SCRIPT,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      #{reportingFactTypeName,jdbcType=VARCHAR},
+      #{reportingFactTypeName},
       <if test="comment != null" >
-        #{comment,jdbcType=VARCHAR},
+        #{comment},
       </if>
       <if test="projectId != null" >
-        #{projectId,jdbcType=INTEGER},
+        #{projectId},
       </if>
-      #{isProductApplicable,jdbcType=BIT},
-      #{preBuildScript,jdbcType=CLOB},
-      #{buildScript,jdbcType=CLOB},
-      #{postBuildScript,jdbcType=CLOB},
+      #{isProductApplicable},
+      #{preBuildScript},
+      #{buildScript},
+      #{postBuildScript},
     </trim>
   </insert>
 
   <update id="update" parameterType="com.nielsen.sdf.domain.Report" >
     update SFA_REPORTING_FACT_TYPE_MASTER
     <set >
-      REPORTING_FACT_TYPE_NAME = #{reportingFactTypeName,jdbcType=VARCHAR},
+      REPORTING_FACT_TYPE_NAME = #{reportingFactTypeName},
       <if test="comment != null" >
-        COMMENT = #{comment,jdbcType=VARCHAR},
+        COMMENT = #{comment},
       </if>
       <if test="projectId != null" >
-        PROJECT_ID = #{projectId,jdbcType=INTEGER},
+        PROJECT_ID = #{projectId},
       </if>
-      IS_PRODUCT_APPLICABLE = #{isProductApplicable,jdbcType=BIT},
-      PRE_BUILD_SCRIPT = #{preBuildScript,jdbcType=CLOB},
-      BUILD_SCRIPT = #{buildScript,jdbcType=CLOB},
-      POST_BUILD_SCRIPT = #{postBuildScript,jdbcType=CLOB}
+      IS_PRODUCT_APPLICABLE = #{isProductApplicable},
+      PRE_BUILD_SCRIPT = #{preBuildScript},
+      BUILD_SCRIPT = #{buildScript},
+      POST_BUILD_SCRIPT = #{postBuildScript}
     </set>
-    where ID = #{id,jdbcType=INTEGER}
+    where ID = #{id}
   </update>
 
 </mapper>
+
 ```
 
 
+
+
+
+```bash
+package com.nielsen.sdf.domain;
+
+public class Report {
+    private Integer id;
+
+    private String reportingFactTypeName;
+
+    private String comment;
+
+    private Integer projectId;
+
+    private Boolean isProductApplicable;
+
+    private String preBuildScript;
+
+    private String buildScript;
+
+    private String postBuildScript;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getReportingFactTypeName() {
+        return reportingFactTypeName;
+    }
+
+    public void setReportingFactTypeName(String reportingFactTypeName) {
+        this.reportingFactTypeName = reportingFactTypeName == null ? null : reportingFactTypeName.trim();
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment == null ? null : comment.trim();
+    }
+
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
+
+    public Boolean getIsProductApplicable() {
+        return isProductApplicable;
+    }
+
+    public void setIsProductApplicable(Boolean isProductApplicable) {
+        this.isProductApplicable = isProductApplicable;
+    }
+
+    public String getPreBuildScript() {
+        return preBuildScript;
+    }
+
+    public void setPreBuildScript(String preBuildScript) {
+        this.preBuildScript = preBuildScript == null ? null : preBuildScript.trim();
+    }
+
+    public String getBuildScript() {
+        return buildScript;
+    }
+
+    public void setBuildScript(String buildScript) {
+        this.buildScript = buildScript == null ? null : buildScript.trim();
+    }
+
+    public String getPostBuildScript() {
+        return postBuildScript;
+    }
+
+    public void setPostBuildScript(String postBuildScript) {
+        this.postBuildScript = postBuildScript == null ? null : postBuildScript.trim();
+    }
+}
+
+```
