@@ -111,7 +111,7 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends
                  .getAliasedFullyQualifiedTableNameAtRuntime());
          answer.addElement(new TextElement(sb.toString()));
 
-         boolean and = false;
+         /*boolean and = false;
          for (IntrospectedColumn introspectedColumn : introspectedTable
                  .getPrimaryKeyColumns()) {
              sb.setLength(0);
@@ -128,10 +128,12 @@ public class SelectByExampleWithoutBLOBsElementGenerator extends
              sb.append(MyBatis3FormattingUtilities
                      .getParameterClause(introspectedColumn));
              answer.addElement(new TextElement(sb.toString()));
-         }
+         }*/
+         
+         
          
          sb.setLength(0);
-         sb.append(" ORDER BY id offset #{startNum}-1   rows fetch next #{pageSize} rows only "); 
+         sb.append("where ${column}=#{value} ORDER BY id offset #{startNum}-1   rows fetch next #{pageSize} rows only "); 
          answer.addElement(new TextElement(sb.toString()));
 
          

@@ -42,7 +42,7 @@ public class ResultMapWithoutBLOBsElementGenerator extends
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("resultMap"); //$NON-NLS-1$
-        answer.addAttribute(new Attribute("id", "mainResultMain"));
+        answer.addAttribute(new Attribute("id", "mainResultMap"));
 
         String returnType;
         if (isSimple) {
@@ -107,8 +107,8 @@ public class ResultMapWithoutBLOBsElementGenerator extends
                             "column", MyBatis3FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn))); //$NON-NLS-1$
             resultElement.addAttribute(new Attribute(
                     "property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-                    introspectedColumn.getJdbcTypeName()));
+          /*  resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
+                    introspectedColumn.getJdbcTypeName()));*/
 
             if (stringHasValue(introspectedColumn.getTypeHandler())) {
                 resultElement.addAttribute(new Attribute(

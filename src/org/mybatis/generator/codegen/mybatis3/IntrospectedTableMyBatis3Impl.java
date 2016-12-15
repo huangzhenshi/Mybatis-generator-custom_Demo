@@ -131,12 +131,12 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
 
     protected void calculateJavaModelGenerators(List<String> warnings,
             ProgressCallback progressCallback) {
-        if (getRules().generateExampleClass()) {
+       /* if (getRules().generateExampleClass()) {
             AbstractJavaGenerator javaGenerator = new ExampleGenerator();
             initializeAbstractGenerator(javaGenerator, warnings,
                     progressCallback);
             javaModelGenerators.add(javaGenerator);
-        }
+        }*/
 
         if (getRules().generatePrimaryKeyClass()) {
             AbstractJavaGenerator javaGenerator = new PrimaryKeyGenerator();
@@ -151,13 +151,13 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
                     progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
-
+/*
         if (getRules().generateRecordWithBLOBsClass()) {
             AbstractJavaGenerator javaGenerator = new RecordWithBLOBsGenerator();
             initializeAbstractGenerator(javaGenerator, warnings,
                     progressCallback);
             javaModelGenerators.add(javaGenerator);
-        }
+        }*/
     }
 
     protected void initializeAbstractGenerator(

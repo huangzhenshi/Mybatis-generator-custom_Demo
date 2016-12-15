@@ -193,11 +193,11 @@ public class BaseRecordGenerator extends AbstractJavaGenerator {
     private List<IntrospectedColumn> getColumnsInThisClass() {
         List<IntrospectedColumn> introspectedColumns;
         if (includePrimaryKeyColumns()) {
-            if (includeBLOBColumns()) {
+           /* if (includeBLOBColumns()) {*/
                 introspectedColumns = introspectedTable.getAllColumns();
-            } else {
+           /* } else {
                 introspectedColumns = introspectedTable.getNonBLOBColumns();
-            }
+            }*/
         } else {
             if (includeBLOBColumns()) {
                 introspectedColumns = introspectedTable

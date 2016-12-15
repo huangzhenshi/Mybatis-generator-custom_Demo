@@ -25,7 +25,7 @@
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<!-- table name,  change tableName and domainObjectName  -->
+		<!-- table name,  change tableName and domainObjectName 
 		<table tableName="SFA_REPORTING_FACT_TYPE_MASTER" domainObjectName="Report" 
 			enableCountByExample="false" 
 			enableUpdateByExample="false" 
@@ -33,6 +33,19 @@
 			enableSelectByExample="true" 
 			selectByExampleQueryId="false" 
 		/>
+		  -->
+
+		  <table tableName="SFA_REPORTING_FACT_TYPE_MASTER" domainObjectName="Report" >
+				  <property name="enableSelectByExample" value="true"/>
+		<!-- 配置这个参数之后，直接会忽略sql中的TRANSACTION_LOG_ID字段，JAVA实体类中也不会生成对应的属性-->
+		<!-- ignoreColumn设置一个MGB忽略的列，如果设置了改列，那么在生成的domain中，生成的SQL中，都不会有该列出现 
+             column:指定要忽略的列的名字；
+             delimitedColumnName：参考table元素的delimitAllColumns配置，默认为false
+
+             注意，一个table元素中可以有多个ignoreColumn元素
+         -->
+				  <ignoreColumn column="TRANSACTION_LOG_ID" delimitedColumnName=""/>
+		  </table>
 		
 	</context>
 </generatorConfiguration>
