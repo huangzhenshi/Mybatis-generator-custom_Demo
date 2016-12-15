@@ -5,7 +5,7 @@
 具体使用的话，还是要根据 项目的本身情况。
 一般mapper中常用的方法: 根据数据库表结构生成一个 resultMap  还有 findById   findAllPage(SQL SERVER的分页查询) save(根据字段是否nullable来生成insert条件语句） update 这几个常用mapper语句
 
-实体类也在src文件夹下面Report.java文件，不区分大小写的 java实体类，还做了 String类型的trim处理，另外在 generator.xml 我还把TRANSACTION_LOG_ID字段屏蔽了，因为还没开始写LOG
+实体类也在src文件夹下面Report.java文件，不区分BLOG大字段数据库类型的 java实体类，还做了 String类型的trim处理，另外在 generator.xml 我还把TRANSACTION_LOG_ID字段屏蔽了，因为还没开始写LOG
 
 
 ```bash
